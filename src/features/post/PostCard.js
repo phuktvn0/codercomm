@@ -15,9 +15,13 @@ import PostReaction from "./PostReaction";
 import CommentForm from "../comment/CommentForm";
 import CommentList from "../comment/CommentList";
 
+import useAuth from "../../hooks/useAuth";
 import PostEdit from "./PostEdit";
 
 function PostCard({ post }) {
+  // console.log(post);
+  const { user } = useAuth();
+
   return (
     <Card>
       <CardHeader
@@ -46,7 +50,7 @@ function PostCard({ post }) {
         }
         action={
           <Box>
-          <PostEdit post={post}/>
+          {post.author._id === user._id && <PostEdit post={post}/>}
           </Box>
         }
       />

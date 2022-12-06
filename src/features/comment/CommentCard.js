@@ -3,13 +3,15 @@ import { Avatar, Box, Paper, Stack, Typography } from "@mui/material";
 import { fDate } from "../../utils/formatTime";
 import CommentReaction from "./CommentReaction";
 import CommentDelete from "./CommentDelete";
+import useAuth from "../../hooks/useAuth";
 
 
 function CommentCard({ comment }) {
-  // console.log( comment._id);
+  // console.log( comment);
   const commentId = comment._id;
   const postId = comment.post;
-  
+  const { user } = useAuth();
+
 
   return (
     <Stack direction="row" spacing={2}>
@@ -26,7 +28,7 @@ function CommentCard({ comment }) {
           </Typography>
           <Typography variant="caption" sx={{ color: "text.disabled", display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'  }}>
             {fDate(comment.createdAt)}
-              <CommentDelete commentId={commentId} postId={postId} />
+            {comment.author._id === user._id && <CommentDelete commentId={commentId} postId={postId} />}
           </Typography>
         </Stack>
         <Typography variant="body2" sx={{ color: "text.secondary" }}>

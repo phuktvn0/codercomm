@@ -16,7 +16,7 @@ import ModalEdit from './ModalEdit';
 export default function PostEdit({ post }) {
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
-
+  // console.log(post);
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
@@ -25,11 +25,12 @@ export default function PostEdit({ post }) {
     setOpen(false);
   };
 
-  const postId = post._id
+  const postId = post._id;
+  const userId = post.author._id;
   const dispatch = useDispatch();
   
   const handleDeletePost = (postId) => {
-    dispatch(deletePost({postId}))
+    dispatch(deletePost({postId, userId}))
   };
 
   return (
