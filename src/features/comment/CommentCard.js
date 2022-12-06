@@ -2,8 +2,15 @@ import React from "react";
 import { Avatar, Box, Paper, Stack, Typography } from "@mui/material";
 import { fDate } from "../../utils/formatTime";
 import CommentReaction from "./CommentReaction";
+import CommentDelete from "./CommentDelete";
+
 
 function CommentCard({ comment }) {
+  // console.log( comment._id);
+  const commentId = comment._id;
+  const postId = comment.post;
+  
+
   return (
     <Stack direction="row" spacing={2}>
       <Avatar alt={comment.author?.name} src={comment.author?.avatarUrl} />
@@ -17,8 +24,9 @@ function CommentCard({ comment }) {
           <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
             {comment.author?.name}
           </Typography>
-          <Typography variant="caption" sx={{ color: "text.disabled" }}>
+          <Typography variant="caption" sx={{ color: "text.disabled", display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'  }}>
             {fDate(comment.createdAt)}
+              <CommentDelete commentId={commentId} postId={postId} />
           </Typography>
         </Stack>
         <Typography variant="body2" sx={{ color: "text.secondary" }}>
@@ -28,6 +36,7 @@ function CommentCard({ comment }) {
           <CommentReaction comment={comment} />
         </Box>
       </Paper>
+
     </Stack>
   );
 }

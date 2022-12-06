@@ -7,15 +7,15 @@ import {
   Avatar,
   Typography,
   CardHeader,
-  IconButton,
 } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { fDate } from "../../utils/formatTime";
 
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import PostReaction from "./PostReaction";
 import CommentForm from "../comment/CommentForm";
 import CommentList from "../comment/CommentList";
+
+import PostEdit from "./PostEdit";
 
 function PostCard({ post }) {
   return (
@@ -45,9 +45,9 @@ function PostCard({ post }) {
           </Typography>
         }
         action={
-          <IconButton>
-            <MoreVertIcon sx={{ fontSize: 30 }} />
-          </IconButton>
+          <Box>
+          <PostEdit postId={post._id}/>
+          </Box>
         }
       />
 

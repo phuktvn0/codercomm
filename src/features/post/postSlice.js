@@ -53,6 +53,16 @@ const slice = createSlice({
       state.currentPagePosts.unshift(newPost._id);
     },
 
+    deletePostSuccess(state, action) {
+      state.isLoading = false;
+      state.error = null;
+      const oldPost = action.payload;
+      console.log('AAAAAAAAAA' + oldPost._id)
+      state.currentPagePosts = state.currentPagePosts.filter((post)=> post !== oldPost._id);
+      state.postsById = delete state.postsById[oldPost._id]
+      
+    },
+
     sendPostReactionSuccess(state, action) {
       state.isLoading = false;
       state.error = null;
@@ -117,6 +127,21 @@ export const sendPostReaction =
           reactions: response.data,
         })
       );
+    } catch (error) {
+      dispatch(slice.actions.hasError(error.message));
+      toast.error(error.message);
+    }
+  };
+
+  export const deletePost =
+  ({ postId }) =>
+  async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await apiService.delete(`/posts/${postId}`);
+      dispatch(slice.actions.deletePostSuccess(response.data));
+      toast.success("Delete post successfully");
+      dispatch(getCurrentUserProfile());
     } catch (error) {
       dispatch(slice.actions.hasError(error.message));
       toast.error(error.message);
