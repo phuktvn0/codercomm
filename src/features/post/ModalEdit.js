@@ -1,25 +1,48 @@
 import React, { useCallback } from "react";
-import { Box, Card, alpha, Stack } from "@mui/material";
+import { Box, Card, alpha, Stack, MenuItem } from "@mui/material";
+
+import Modal from '@mui/material/Modal';
+import { useDispatch, useSelector } from "react-redux";
+import * as Yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+
 
 import { FormProvider, FTextField, FUploadImage } from "../../components/form";
-import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as Yup from "yup";
-import { createPost } from "./postSlice";
+
+import { editPost } from "./postSlice";
 import { LoadingButton } from "@mui/lab";
 
-const yupSchema = Yup.object().shape({
-  content: Yup.string().required("Content is required"),
-});
 
-const defaultValues = {
-  content: "",
-  image: null,
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
 };
 
-function PostForm() {
+
+
+export default function ModalEdit({post}) {
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   const { isLoading } = useSelector((state) => state.post);
+
+  const yupSchema = Yup.object().shape({
+    content: Yup.string().required("Content is required"),
+  });
+  
+  const defaultValues = {
+    content: post.content,
+    image: post.image || null,
+  };
 
   const methods = useForm({
     resolver: yupResolver(yupSchema),
@@ -50,12 +73,23 @@ function PostForm() {
   );
 
   const onSubmit = (data) => {
-    console.log(data);
-    dispatch(createPost(data)).then(() => reset());
+    const postId = post._id;
+    // console.log(data, postId);
+    handleClose();
+    dispatch(editPost(data, postId)).then(() => reset());
   };
 
   return (
-    <Card sx={{ p: 3 }}>
+    <div>
+      <MenuItem onClick={handleOpen}>Edit</MenuItem>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+        <Card sx={{ p : 3 }}>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={2}>
           <FTextField
@@ -92,13 +126,15 @@ function PostForm() {
               size="small"
               loading={isSubmitting || isLoading}
             >
-              Post
+              Edit
             </LoadingButton>
+            <MenuItem onClick={handleClose}>Hủy</MenuItem>
           </Box>
         </Stack>
       </FormProvider>
     </Card>
+    </Box>
+      </Modal>
+    </div>
   );
 }
-
-export default PostForm;

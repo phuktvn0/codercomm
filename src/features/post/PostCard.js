@@ -46,7 +46,7 @@ function PostCard({ post }) {
         }
         action={
           <Box>
-          <PostEdit postId={post._id}/>
+          <PostEdit post={post}/>
           </Box>
         }
       />
@@ -59,7 +59,6 @@ function PostCard({ post }) {
             sx={{
               borderRadius: 2,
               overflow: "hidden",
-              height: 300,
               "& img": { objectFit: "cover", width: 1, height: 1 },
             }}
           >

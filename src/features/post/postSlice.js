@@ -53,14 +53,16 @@ const slice = createSlice({
       state.currentPagePosts.unshift(newPost._id);
     },
 
+    editPostSuccess(state, action) {
+      state.isLoading = false;
+      state.error = null;
+    },
+
     deletePostSuccess(state, action) {
       state.isLoading = false;
       state.error = null;
       const oldPost = action.payload;
-      console.log('AAAAAAAAAA' + oldPost._id)
-      state.currentPagePosts = state.currentPagePosts.filter((post)=> post !== oldPost._id);
-      state.postsById = delete state.postsById[oldPost._id]
-      
+      state.currentPagePosts = state.currentPagePosts.filter((postId)=> postId !== oldPost._id);
     },
 
     sendPostReactionSuccess(state, action) {
@@ -111,6 +113,27 @@ export const createPost =
     }
   };
 
+  export const editPost = 
+  ({ content, image }, postId) =>
+  async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      // console.log({content, image}, postId)
+      
+      const imageUrl = await cloudinaryUpload(image);
+      const response = await apiService.put(`/posts/${postId}`, {
+        content,
+        image: imageUrl,
+      });
+      dispatch(slice.actions.editPostSuccess(response.data));
+      toast.success("Edit Post successfully");
+      dispatch(getCurrentUserProfile());
+    } catch (error) {
+      dispatch(slice.actions.hasError(error.message));
+      toast.error(error.message);
+    }
+  };
+
 export const sendPostReaction =
   ({ postId, emoji }) =>
   async (dispatch) => {
@@ -147,3 +170,5 @@ export const sendPostReaction =
       toast.error(error.message);
     }
   };
+
+  
