@@ -169,7 +169,7 @@ export const sendPostReaction =
     try {
       const response = await apiService.delete(`/posts/${postId}`);
       dispatch(slice.actions.deletePostSuccess(response.data));
-      dispatch(getPosts({ userId }));
+      // dispatch(getPosts({ userId }));
       toast.success("Delete post successfully");
     } catch (error) {
       dispatch(slice.actions.hasError(error.message));
