@@ -68,7 +68,9 @@ const slice = createSlice({
       state.isLoading = false;
       state.error = null;
       const oldPost = action.payload;
-      state.currentPagePosts = state.currentPagePosts.filter((postId)=> postId !== oldPost._id);
+      state.currentPagePosts = state.currentPagePosts.filter(
+        (postId) => postId !== oldPost._id
+      );
     },
 
     sendPostReactionSuccess(state, action) {
@@ -91,6 +93,8 @@ export const getPosts =
       const response = await apiService.get(`/posts/user/${userId}`, {
         params,
       });
+      // console.log('xoa bai', response);
+      // console.log('so trang', page);
       if (page === 1) dispatch(slice.actions.resetPosts());
       dispatch(slice.actions.getPostsSuccess(response.data));
     } catch (error) {
@@ -119,13 +123,13 @@ export const createPost =
     }
   };
 
-  export const editPost = 
+export const editPost =
   ({ content, image }, postId) =>
   async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       // console.log({content, image}, postId)
-      
+
       const imageUrl = await cloudinaryUpload(image);
       const response = await apiService.put(`/posts/${postId}`, {
         content,
@@ -162,19 +166,17 @@ export const sendPostReaction =
     }
   };
 
-  export const deletePost =
+export const deletePost =
   ({ postId, userId }) =>
   async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await apiService.delete(`/posts/${postId}`);
       dispatch(slice.actions.deletePostSuccess(response.data));
-      // dispatch(getPosts({ userId }));
+      dispatch(getPosts({ userId }));
       toast.success("Delete post successfully");
     } catch (error) {
       dispatch(slice.actions.hasError(error.message));
       toast.error(error.message);
     }
   };
-
-  

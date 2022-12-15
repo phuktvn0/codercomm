@@ -49,9 +49,7 @@ function PostCard({ post }) {
           </Typography>
         }
         action={
-          <Box>
-          {post.author._id === user._id && <PostEdit post={post}/>}
-          </Box>
+          <Box>{post.author._id === user._id && <PostEdit post={post} />}</Box>
         }
       />
 

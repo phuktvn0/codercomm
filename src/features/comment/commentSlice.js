@@ -103,7 +103,7 @@ export const createComment =
     }
   };
 
-  export const deleteComment =
+export const deleteComment =
   ({ postId, commentId }) =>
   async (dispatch) => {
     dispatch(slice.actions.startLoading());
